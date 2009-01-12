@@ -1,0 +1,35 @@
+= CacheVersion
+
+CacheVersion is an ActiveRecord model used to store the version of any class. This can be
+used for cache invalidation, and RecordCache and MethodCache use it for that. It uses
+memcache to reduce database access when the version of a class hasn't changed.
+
+== Usage:
+
+  CacheVersion.get(User)
+  # => 0
+  
+  CacheVersion.increment(User)
+  CacheVersion.get(User)
+  # => 1
+
+  # Or you can use the alternate syntax:
+
+  User.version
+  # => 1
+
+  User.increment_version
+  User.version
+  # => 2
+
+== Install:
+
+  sudo gem install cache_version
+
+Requires the extended version of the memcache client (http://github.com/ninjudd/memcache).
+
+Also, you need to create a migration to make the cache_versions table. See examples/sample_migration.rb
+
+== License:
+
+Copyright (c) 2009 Jusin Balthrop, Geni.com; Published under The MIT License, see License.txt
