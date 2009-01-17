@@ -32,4 +32,4 @@ Also, you need to create a migration to make the cache_versions table. See examp
 
 == License:
 
-Copyright (c) 2009 Jusin Balthrop, Geni.com; Published under The MIT License, see License.txt
+Copyright (c) 2009 Justin Balthrop, Geni.com; Published under The MIT License, see License.txt
