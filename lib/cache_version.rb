@@ -35,7 +35,16 @@ class CacheVersion < ActiveRecord::Base
   def self.cache_key(key)
     "cv:#{key}"
   end
-      
+end
+
+class Module
+  def version
+    CacheVersion.get(self)
+  end
+
+  def increment_version
+    CacheVersion.increment(self)
+  end
 end
 
 class CacheVersionMigration < ActiveRecord::Migration
