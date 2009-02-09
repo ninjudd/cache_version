@@ -35,6 +35,10 @@ class CacheVersion < ActiveRecord::Base
   def self.cache_key(key)
     "cv:#{key}"
   end
+
+  class << self
+    attr_accessor :partition_environments
+  end
 end
 
 class Module
@@ -44,6 +48,13 @@ class Module
 
   def increment_version
     CacheVersion.increment(self)
+  end
+
+  def version_key
+    if CacheVersion.partition_environments and RAILS_ENV != 'production'
+      env_suffix = "_#{RAILS_ENV}"
+    end
+    "#{self.name}_#{self.version}#{env_suffix}"
   end
 end
 
