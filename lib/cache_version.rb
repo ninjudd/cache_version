@@ -3,8 +3,6 @@ require 'active_record'
 require 'memcache_extended'
 
 module CacheVersion
-  VERSION = '0.9.2'
-
   def self.db
     ActiveRecord::Base.connection
   end
