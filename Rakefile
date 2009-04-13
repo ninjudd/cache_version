@@ -1,12 +1,43 @@
-# -*- ruby -*-
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
 
-require 'rubygems'
-require 'hoe'
-require './lib/cache_version.rb'
-
-Hoe.new('CacheVersions', CacheVersions::VERSION) do |p|
-  # p.rubyforge_name = 'CacheVersionsx' # if different than lowercase project name
-  p.developer('Justin Balthrop', 'code@justinbalthrop.com')
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |s|
+    s.name = "cache_version"
+    s.summary = %Q{Store the version of any class for cache invalidation}
+    s.email = "code@justinbalthrop.com"
+    s.homepage = "http://github.com/ninjudd/cache_version"
+    s.description = "Store the version of any class for cache invalidation"
+    s.authors = ["Justin Balthrop"]
+  end
+rescue LoadError
+  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
-# vim: syntax=Ruby
+Rake::TestTask.new do |t|
+  t.libs << 'lib'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = false
+end
+
+Rake::RDocTask.new do |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title    = 'cache_version'
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |t|
+    t.libs << 'test'
+    t.test_files = FileList['test/**/*_test.rb']
+    t.verbose = true
+  end
+rescue LoadError
+end
+
+task :default => :test
