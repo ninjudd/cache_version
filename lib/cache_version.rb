@@ -20,10 +20,11 @@ module CacheVersion
 
   def self.increment(key)
     key = key.to_s
-    db.execute("INSERT INTO cache_versions (key, version) VALUES ('#{key}', 1)")
-  rescue ActiveRecord::StatementInvalid
-    db.execute("UPDATE cache_versions SET version = version + 1 WHERE key = '#{key}'")
-  ensure
+    if get(key) == 0
+      db.execute("INSERT INTO cache_versions (key, version) VALUES ('#{key}', 1)")
+    else
+      db.execute("UPDATE cache_versions SET version = version + 1 WHERE key = '#{key}'")
+    end
     invalidate_cache(key)    
   end
 
