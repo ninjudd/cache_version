@@ -12,8 +12,8 @@ module CacheVersion
   end
 
   def self.get(key)
-    key = key.to_s    
-    version_by_key[key] ||= CACHE.get_or_set(cache_key(key)) do    
+    key = key.to_s
+    version_by_key[key] ||= CACHE.get_or_set(cache_key(key)) do
       db.select_value("SELECT version FROM cache_versions WHERE key = '#{key}'").to_i
     end
   end
@@ -25,7 +25,7 @@ module CacheVersion
     else
       db.execute("UPDATE cache_versions SET version = version + 1 WHERE key = '#{key}'")
     end
-    invalidate_cache(key)    
+    invalidate_cache(key)
   end
 
   def self.invalidate_cache(key)
@@ -50,12 +50,14 @@ private
 end
 
 class Module
-  def version
-    CacheVersion.get(self)
+  def version(context = nil)
+    key = [self, context].compact.join('_')
+    CacheVersion.get(key)
   end
 
-  def increment_version
-    CacheVersion.increment(self)
+  def increment_version(context = nil)
+    key = [self, context].compact.join('_')
+    CacheVersion.increment(key)
   end
 end
 
