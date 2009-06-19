@@ -14,7 +14,7 @@ module CacheVersion
   def self.get(key)
     key = key.to_s
     version_by_key[key] ||= CACHE.get_or_set(cache_key(key)) do
-      db.select_value("SELECT version FROM cache_versions WHERE `key` = '#{key}'").to_i
+      db.select_value("SELECT version FROM cache_versions WHERE key = '#{key}'").to_i
     end
   end
 
@@ -23,7 +23,7 @@ module CacheVersion
     if get(key) == 0
       db.execute("INSERT INTO cache_versions (key, version) VALUES ('#{key}', 1)")
     else
-      db.execute("UPDATE cache_versions SET version = version + 1 WHERE `key` = '#{key}'")
+      db.execute("UPDATE cache_versions SET version = version + 1 WHERE key = '#{key}'")
     end
     invalidate_cache(key)
     get(key)
@@ -40,7 +40,6 @@ module CacheVersion
   end
 
 private
-  
   def self.version_by_key
     @version_by_key ||= {}
   end  
