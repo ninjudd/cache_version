@@ -26,6 +26,7 @@ module CacheVersion
       db.execute("UPDATE cache_versions SET version = version + 1 WHERE key = '#{key}'")
     end
     invalidate_cache(key)
+    get(key)
   end
 
   def self.invalidate_cache(key)
