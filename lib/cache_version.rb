@@ -4,7 +4,11 @@ require 'memcache_extended'
 
 module CacheVersion
   def self.db
-    ActiveRecord::Base.connection
+    if @db.nil?
+      @db = ActiveRecord::Base.connection
+      @db = @db.send(:master) if defined?(DataFabric::ConnectionProxy) and @db.kind_of?(DataFabric::ConnectionProxy)
+    end
+    @db
   end
   
   def self.cache
@@ -45,7 +49,7 @@ private
   end  
     
   def self.cache_key(key)
-    "v:#{key}"
+    "v_#{key}"
   end
 end
 
