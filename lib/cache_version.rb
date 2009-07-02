@@ -49,7 +49,7 @@ private
   end  
     
   def self.cache_key(key)
-    "v_#{key}"
+    "v:#{key}"
   end
 end
 
