@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name = %q{cache_version}
-  s.version = "0.9.2"
+  s.version = "0.9.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Justin Balthrop"]
-  s.date = %q{2009-04-13}
+  s.date = %q{2009-07-29}
   s.description = %q{Store the version of any class for cache invalidation}
   s.email = %q{code@justinbalthrop.com}
   s.files = ["README.rdoc", "VERSION.yml", "lib/cache_version.rb", "test/cache_version_test.rb", "test/test_helper.rb"]
