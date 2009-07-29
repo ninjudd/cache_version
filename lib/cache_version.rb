@@ -4,7 +4,11 @@ require 'memcache_extended'
 
 module CacheVersion
   def self.db
-    ActiveRecord::Base.connection
+    if @db.nil?
+      @db = ActiveRecord::Base.connection
+      @db = @db.send(:master) if defined?(DataFabric::ConnectionProxy) and @db.kind_of?(DataFabric::ConnectionProxy)
+    end
+    @db
   end
   
   def self.cache
@@ -26,6 +30,7 @@ module CacheVersion
       db.execute("UPDATE cache_versions SET version = version + 1 WHERE key = '#{key}'")
     end
     invalidate_cache(key)
+    get(key)
   end
 
   def self.invalidate_cache(key)
@@ -39,7 +44,6 @@ module CacheVersion
   end
 
 private
-  
   def self.version_by_key
     @version_by_key ||= {}
   end  
