@@ -4,7 +4,6 @@ class CacheVersionTest < Test::Unit::TestCase
   context 'with a memcache and db connection' do
     setup do
       system('memcached -d')
-      CACHE.servers = ["localhost:11211"]
       CacheVersionMigration.up
     end
     

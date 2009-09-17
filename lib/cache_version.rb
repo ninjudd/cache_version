@@ -1,6 +1,6 @@
 require 'rubygems'
+require 'memcache'
 require 'active_record'
-require 'memcache_extended'
 
 module CacheVersion
   def self.db
@@ -17,7 +17,7 @@ module CacheVersion
 
   def self.get(key)
     key = key.to_s
-    version_by_key[key] ||= CACHE.get_or_set(cache_key(key)) do
+    version_by_key[key] ||= CACHE.get_or_add(cache_key(key)) do
       db.select_value("SELECT version FROM cache_versions WHERE key = '#{key}'").to_i
     end
   end
