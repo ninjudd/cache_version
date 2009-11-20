@@ -30,7 +30,7 @@ Also, you need to create a migration to make the cache_versions table. See examp
 
 == Dependencies:
 
-  http://github.com/ninjudd/memcache
+* http://github.com/ninjudd/memcache
 
 == License:
 
