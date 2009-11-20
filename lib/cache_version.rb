@@ -4,11 +4,12 @@ require 'active_record'
 
 module CacheVersion
   def self.db
-    if @db.nil?
-      @db = ActiveRecord::Base.connection
-      @db = @db.send(:master) if defined?(DataFabric::ConnectionProxy) and @db.kind_of?(DataFabric::ConnectionProxy)
+    db = ActiveRecord::Base.connection
+    if defined?(DataFabric::ConnectionProxy) and db.kind_of?(DataFabric::ConnectionProxy)
+      db.send(:master)
+    else
+      db
     end
-    @db
   end
   
   def self.cache
