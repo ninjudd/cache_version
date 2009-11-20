@@ -24,10 +24,13 @@ database access when the version of a class hasn't changed.
 
 == Install:
 
-  sudo gem install ninjudd-memcache -s http://gems.github.com
-  sudo gem install ninjudd-cache_version -s http://gems.github.com
+  sudo gem install cache-version -s http://gemcutter.org
 
 Also, you need to create a migration to make the cache_versions table. See examples/sample_migration.rb
+
+== Dependencies:
+
+  http://github.com/ninjudd/memcache
 
 == License:
 
