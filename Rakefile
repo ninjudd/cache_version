@@ -11,7 +11,9 @@ begin
     s.homepage = "http://github.com/ninjudd/cache_version"
     s.description = "Store the version of any class for cache invalidation"
     s.authors = ["Justin Balthrop"]
+    s.add_dependency('memcache', '>= 1.0.0')
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
