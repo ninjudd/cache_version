@@ -38,7 +38,7 @@ module CacheVersion
     version_by_key.delete(key)
   end
 
-  def self.clear_cache(force=false)
+  def self.clear_cache(force = false)
     if v = cache.get(vkey)
       if force == true or @version.nil? or v > @version
         @version = v
