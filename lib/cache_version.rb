@@ -5,10 +5,10 @@ require 'active_record'
 module CacheVersion
   def self.db
     db = ActiveRecord::Base.connection
-    db = db.send(:master) if defined?(DataFabric::ConnectionProxy) and db.kind_of?(DataFabric::ConnectionProxy)    
+    db = db.send(:master) if defined?(DataFabric::ConnectionProxy) and db.kind_of?(DataFabric::ConnectionProxy)
     db
   end
-  
+
   def self.cache
     CACHE
   end
@@ -27,7 +27,7 @@ module CacheVersion
     else
       db.execute("UPDATE cache_versions SET version = version + 1 WHERE key = '#{key}'")
     end
-    cache.set(cache_vv_key, Time.now.to_i)
+    cache.set(vkey, Time.now.to_i)
     invalidate_cache(key)
     get(key)
   end
@@ -39,32 +39,26 @@ module CacheVersion
   end
 
   def self.clear_cache(force=false)
-    if cv = cache.get(cache_vv_key)
-      if not @cache_version_version
-        @cache_version_version = cv
-
-      elsif force == true
-        @version_by_key.clear
-
-      elsif cv > @cache_version_version
-        @cache_version_version = cv
+    if v = cache.get(vkey)
+      if force == true or @version.nil? or v > @version
+        @version = v
         @version_by_key.clear
       end
-    else 
-      @cache_version_version = cache.get_or_add(cache_vv_key, Time.now.to_i)
+    else
+      @version = cache.get_or_add(vkey, Time.now.to_i)
     end
   end
 
 private
   def self.version_by_key
     @version_by_key ||= {}
-  end  
-    
+  end
+
   def self.cache_key(key)
     "v:#{key}"
   end
 
-  def self.cache_vv_key
+  def self.vkey
     "v:CacheVersion"
   end
 end
