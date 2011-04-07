@@ -16,16 +16,16 @@ module CacheVersion
   def self.get(key)
     key = key.to_s
     version_by_key[key] ||= CACHE.get_or_add(cache_key(key)) do
-      db.select_value("SELECT version FROM cache_versions WHERE key = '#{key}'").to_i
+      db.select_value("SELECT version FROM cache_versions WHERE cache_versions.key = '#{key}'").to_i
     end
   end
 
   def self.increment(key)
     key = key.to_s
     if get(key) == 0
-      db.execute("INSERT INTO cache_versions (key, version) VALUES ('#{key}', 1)")
+      db.execute("INSERT INTO cache_versions (cache_versions.key, version) VALUES ('#{key}', 1)")
     else
-      db.execute("UPDATE cache_versions SET version = version + 1 WHERE key = '#{key}'")
+      db.execute("UPDATE cache_versions SET version = version + 1 WHERE cache_versions.key = '#{key}'")
     end
     cache.set(vkey, Time.now.to_i)
     invalidate_cache(key)
