@@ -42,7 +42,7 @@ module CacheVersion
     if v = cache.get(vkey)
       if force == true or @version.nil? or v > @version
         @version = v
-        @version_by_key.clear
+        version_by_key.clear
       end
     else
       @version = cache.get_or_add(vkey, Time.now.to_i)
