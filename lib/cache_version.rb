@@ -21,15 +21,11 @@ module CacheVersion
   end
 
   def self.increment(key)
-    key = key.to_s
-    if get(key) == 0
-      db.execute("INSERT INTO cache_versions (#{key_column}, version) VALUES ('#{key}', 1)")
-    else
-      db.execute("UPDATE cache_versions SET version = version + 1 WHERE #{key_column} = '#{key}'")
-    end
-    cache.set(vkey, Time.now.to_i)
-    invalidate_cache(key)
-    get(key)
+    alter(key, 1, 'version + 1')
+  end
+
+  def self.set(key, value)
+    alter(key, value.to_i)
   end
 
   def self.invalidate_cache(key)
@@ -50,6 +46,21 @@ module CacheVersion
   end
 
 private
+
+  def self.alter(key, init, update = init)
+    key = key.to_s
+
+    if get(key) == 0
+      db.execute("INSERT INTO cache_versions (#{key_column}, version) VALUES ('#{key}', #{init})")
+    else
+      db.execute("UPDATE cache_versions SET version = #{update} WHERE #{key_column} = '#{key}'")
+    end
+
+    cache.set(vkey, Time.now.to_i)
+    invalidate_cache(key)
+    get(key)
+  end
+
   def self.version_by_key
     @version_by_key ||= {}
   end
@@ -76,6 +87,11 @@ class Module
   def increment_version(context = nil)
     key = [self, context].compact.join('_')
     CacheVersion.increment(key)
+  end
+
+  def set_version(value, context = nil)
+    key = [self, context].compact.join('_')
+    CacheVersion.set(key, value)
   end
 end
 
